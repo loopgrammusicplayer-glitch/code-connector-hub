@@ -52,12 +52,13 @@ export function FeedCard({ item, index = 99 }: { item: Item; index?: number }) {
   const key = `${item.media_type}:${item.id}`;
   const saved = useStore((s) => s.watchlist.some((w) => w.key === key));
   const [bad, setBad] = useState(false);
-  if (!src || bad) return null;
+  if (!src) return null;
   return (
     <article className="group">
       <Link {...itemLink(item)} {...intent} className="block">
-        <div className="aspect-video overflow-hidden rounded-xl bg-muted">
-          <img src={src} alt="" width={780} height={439} {...imgPriority(index)} decoding="async" referrerPolicy="no-referrer" onError={() => setBad(true)} className="h-full w-full object-cover transition group-hover:scale-[1.02]" />
+        <div className="aspect-video overflow-hidden rounded-xl bg-muted flex items-center justify-center">
+          {bad ? <span className="px-4 text-center text-sm font-medium text-muted-foreground line-clamp-2">{item.title}</span>
+            : <img src={src} alt="" width={780} height={439} {...imgPriority(index)} decoding="async" referrerPolicy="no-referrer" onError={() => setBad(true)} className="h-full w-full object-cover transition group-hover:scale-[1.02]" />}
         </div>
       </Link>
       <div className="mt-2 flex gap-3">
