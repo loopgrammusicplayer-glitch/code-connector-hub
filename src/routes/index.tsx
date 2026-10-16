@@ -42,7 +42,6 @@ function Home() {
     queryFn: ({ pageParam, signal }) => api<ListRes>({ a: "feed", page: pageParam }, signal),
     initialPageParam: 1,
     getNextPageParam: (last) => (last.page < last.total_pages ? last.page + 1 : undefined),
-    maxPages: 8, // memory cap: older pages are dropped as you scroll
     staleTime: 10 * 60_000,
     enabled: !rows.isPending, // start the feed only after the top rows arrive
   });
@@ -64,7 +63,7 @@ function Home() {
     <Page>
       <h1 className="sr-only">LOOPGRAM home</h1>
       <ForYou />
-      {rows.data?.rows.slice(0, 2).map((r) => <Row key={r.key} title={r.title} items={r.items} />)}
+      {rows.data?.rows.map((r) => <Row key={r.key} title={r.title} items={r.items} />)}
       <h2 className="px-4 pb-2 pt-4 text-lg font-bold">Trending this week</h2>
       {feed.isPending || feed.isLoading ? <Skel /> : feed.isError && !items.length ? <ErrorBox error={feed.error} retry={() => feed.refetch()} /> : (
         <div className="grid grid-cols-1 gap-x-4 gap-y-8 px-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -75,9 +74,8 @@ function Home() {
           ))}
         </div>
       )}
-      {rows.data?.rows.slice(2).map((r) => <Row key={r.key} title={r.title} items={r.items} />)}
+      {feed.isFetchingNextPage && <div className="mt-6"><Skel n={3} /></div>}
       <div ref={sentinel} className="h-10" />
-      {feed.isFetchingNextPage && <Skel n={3} />}
       {feed.isError && items.length > 0 && <ErrorBox error={feed.error} retry={() => feed.fetchNextPage()} />}
       {!feed.hasNextPage && items.length > 0 && <p className="py-6 text-center text-sm text-muted-foreground">You reached the end of trending.</p>}
     </Page>
