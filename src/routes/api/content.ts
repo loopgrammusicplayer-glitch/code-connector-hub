@@ -119,12 +119,17 @@ async function handle(a: string, q: URLSearchParams) {
       const t = media.parse(g("type") ?? "movie");
       const sort = z.enum(["popularity.desc", "vote_average.desc", "primary_release_date.desc", "first_air_date.desc", "title.asc", "name.asc", "original_title.asc"]).parse(g("sort") ?? "popularity.desc");
       const genre = g("genre") ? z.string().regex(/^[\d,|]{1,60}$/).parse(g("genre")) : undefined;
-      const minVotes = sort.startsWith("vote") || sort.endsWith(".asc") ? 50 : undefined;
+      const newest = sort.endsWith("date.desc");
+      const minVotes = sort.startsWith("vote") || sort.endsWith(".asc") ? 50 : newest ? 3 : undefined;
+      // Cap "Newest" at today so unreleased placeholders (no trailers yet) never appear.
+      const today = new Date().toISOString().slice(0, 10);
+      const dateCap = newest ? (t === "movie" ? { "primary_release_date.lte": today } : { "first_air_date.lte": today }) : {};
       const r = list(await tmdbJson(`discover/${t}`, {
         page: page.parse(g("page")), sort_by: sort, with_genres: genre, include_adult: "false",
-        "vote_count.gte": minVotes,
+        "vote_count.gte": minVotes, ...dateCap,
       }), t);
-      return { ...r, results: quickCheck(r.results, t, 50) };
+      // Only titles with a verified in-site playable video reach the UI.
+      return { ...r, results: await keepPlayable(r.results, t, 50) };
     }
     case "genres": {
       const [m, t] = await Promise.all([tmdbJson("genre/movie/list"), tmdbJson("genre/tv/list")]);
