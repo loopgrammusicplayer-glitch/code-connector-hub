@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
+import { Shell } from "@/components/Shell";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -78,21 +79,32 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { title: "LOOPGRAM" },
+      { name: "description", content: "Endless movie and TV discovery." },
+      { name: "theme-color", content: "#0f0f0f" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/icon.svg" },
+      { rel: "preconnect", href: "https://image.tmdb.org" },
+      { rel: "dns-prefetch", href: "https://image.tmdb.org" },
+      { rel: "preconnect", href: "https://www.youtube-nocookie.com" },
+      { rel: "dns-prefetch", href: "https://www.youtube-nocookie.com" },
+      { rel: "preconnect", href: "https://www.youtube.com" },
+      { rel: "dns-prefetch", href: "https://www.youtube.com" },
+      { rel: "preconnect", href: "https://i.ytimg.com" },
+      { rel: "dns-prefetch", href: "https://i.ytimg.com" },
+      { rel: "preconnect", href: "https://googleads.g.doubleclick.net" },
+      { rel: "dns-prefetch", href: "https://googleads.g.doubleclick.net" },
+      { rel: "dns-prefetch", href: "https://www.google.com" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -121,7 +133,9 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <Shell>
+        <Outlet />
+      </Shell>
     </QueryClientProvider>
   );
 }
