@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Bookmark, BookmarkCheck, Share2, User } from "lucide-react";
+import { shareLink } from "@/lib/share";
 import { api, img, track } from "@/lib/api";
 import { signal, toggleSave, useStore } from "@/lib/store";
 import { ErrorBox, Page, Row } from "@/components/lg";
@@ -54,11 +55,7 @@ function TitlePage() {
   const trailer = playable.find((v: any) => v.type === "Trailer") ?? playable[0];
   const anyProv = Object.keys(d.providers).length > 0;
   const bg = img(d.backdrop_path, "w780");
-  const share = () => {
-    const url = location.href;
-    if (navigator.share) navigator.share({ title: d.title, url }).catch(() => {});
-    else navigator.clipboard?.writeText(url);
-  };
+  const share = () => shareLink({ title: d.title, url: location.href });
 
   return (
     <Page>

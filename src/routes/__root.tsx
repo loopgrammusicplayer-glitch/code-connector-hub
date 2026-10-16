@@ -11,6 +11,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import { Shell } from "@/components/Shell";
+import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -136,6 +137,8 @@ function RootComponent() {
       <Shell>
         <Outlet />
       </Shell>
+      <Toaster position="bottom-center" />
+
     </QueryClientProvider>
   );
 }

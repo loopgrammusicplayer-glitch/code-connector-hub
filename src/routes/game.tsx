@@ -52,7 +52,7 @@ function Game() {
           <div className="mt-4 rounded-xl bg-secondary p-4">
             <p className="font-bold">{done.correct ? "Correct!" : "Not this time."} The answer is {answer.title}.</p>
             <Link to="/t/$type/$id" params={{ type: "movie", id: String(answer.id) }} className="mt-2 inline-block rounded-full bg-primary px-4 py-1.5 text-sm text-primary-foreground">View title</Link>
-            <button className="ml-2 rounded-full border px-4 py-1.5 text-sm" onClick={() => { const t = `LOOPGRAM Daily ${g.date}: ${done.correct ? "✅" : "❌"} streak ${streak}`; navigator.share ? navigator.share({ text: t, url: location.origin + "/game" }).catch(() => {}) : navigator.clipboard?.writeText(t); }}>Share</button>
+            <button className="ml-2 rounded-full border px-4 py-1.5 text-sm" onClick={() => { const t = `LOOPGRAM Daily ${g.date}: ${done.correct ? "✅" : "❌"} streak ${streak}`; import("@/lib/share").then((m) => m.shareLink({ text: t, url: location.origin + "/game" })); }}>Share</button>
             <p className="mt-2 text-xs text-muted-foreground">A new puzzle arrives tomorrow.</p>
           </div>
         )}
